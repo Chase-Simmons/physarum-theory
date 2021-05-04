@@ -4,9 +4,9 @@ export default () => {
   const randomBool = Math.floor(Math.random() * 2);
 
   if (randomBool === 1) {
-    randomDirection = -2;
+    randomDirection = -1;
   } else {
-    randomDirection = 2;
+    randomDirection = 1;
   }
   return randomDirection;
 };
