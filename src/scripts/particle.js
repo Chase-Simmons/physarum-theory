@@ -3,7 +3,7 @@ import ranColor from './ranColor';
 import ranDir from './ranDirection';
 
 const ctx = canvas.getContext('2d');
-// ctx.filter = 'blur(1px)';
+// ctx.filter = 'blur(1px';
 
 class Particle {
   constructor(x, y, radius, color, velocity) {
@@ -25,6 +25,16 @@ class Particle {
   update() {
     this.x += this.velocity.x;
     this.y += this.velocity.y;
+
+    if (
+      this.x > canvas.width ||
+      this.x < 0 ||
+      this.y > canvas.height ||
+      this.y < 0
+    ) {
+      this.velocity.x = ranDir();
+      this.velocity.y = ranDir();
+    }
   }
 
   manageTrail() {
@@ -45,7 +55,7 @@ class Particle {
   }
 }
 
-const spawnCount = 1000;
+const spawnCount = 200;
 const size = 2;
 const particles = [];
 
@@ -66,19 +76,24 @@ for (let i = 0; i < spawnCount; i++) {
 
 function animate() {
   requestAnimationFrame(animate);
-
-  ctx.fillStyle = '#11111901';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
   particles.forEach((particle) => {
-    particle.velocity.x = ranDir();
-    particle.velocity.y = ranDir();
     particle.update();
     particle.draw();
-    particle.manageTrail();
-    // particle.trail.forEach((trailingParticle) => {
-    //   trailingParticle.draw();
-    // });
   });
 }
+
+function decreaseAlphas() {
+  let pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+  for (let i = 0; i < pixels.data.length; i += 4) {
+    pixels.data[i + 3] = pixels.data[i + 3] - 1; //alpha
+  }
+
+  ctx.putImageData(pixels, 0, 0);
+}
+
+setInterval(() => {
+  decreaseAlphas();
+}, 100);
 // console.log(particles);
 animate();
