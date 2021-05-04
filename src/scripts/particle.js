@@ -1,4 +1,6 @@
 import canvas from './canvas';
+import ranColor from './ranColor';
+import ranDir from './ranDirection';
 
 const ctx = canvas.getContext('2d');
 
@@ -19,8 +21,32 @@ class Particle {
     ctx.fillStyle = this.color;
     ctx.fill();
   }
+
+  update() {
+    this.x += this.velocity.x;
+    this.y += this.velocity.y;
+  }
 }
 
-const particle = new Particle(100, 100, 30, 'red');
+const spawnCount = 10;
 
-particle.draw();
+const particles = [];
+
+for (let i = 0; i < spawnCount; i++) {
+  particles.push(
+    new Particle(100, 100, 5, ranColor(), { x: ranDir(), y: ranDir() })
+  );
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  particles.forEach((particle) => {
+    particle.velocity.x = ranDir();
+    particle.velocity.y = ranDir();
+    particle.update();
+    particle.draw();
+  });
+}
+console.log(particles);
+animate();
