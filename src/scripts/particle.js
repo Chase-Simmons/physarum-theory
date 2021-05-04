@@ -3,16 +3,16 @@ import ranColor from './ranColor';
 import ranDir from './ranDirection';
 
 const ctx = canvas.getContext('2d');
+// ctx.filter = 'blur(1px)';
 
 class Particle {
-  constructor(x, y, radius, color, velocity) {
+  constructor(x, y, radius, color, velocity, opacity) {
     this.x = x;
     this.y = y;
-
     this.radius = radius;
     this.color = color;
-
     this.velocity = velocity;
+    this.opacity = opacity;
   }
 
   draw() {
@@ -28,19 +28,29 @@ class Particle {
   }
 }
 
-const spawnCount = 10;
-
+const spawnCount = 400;
+const size = 2;
 const particles = [];
 
 for (let i = 0; i < spawnCount; i++) {
   particles.push(
-    new Particle(100, 100, 5, ranColor(), { x: ranDir(), y: ranDir() })
+    new Particle(
+      window.innerWidth / 2,
+      window.innerHeight / 2,
+      size,
+      ranColor(),
+      {
+        x: ranDir(),
+        y: ranDir(),
+      }
+    )
   );
 }
 
 function animate() {
   requestAnimationFrame(animate);
-
+  ctx.fillStyle = '#ffffff02';
+  // ctx.fillRect(0, 0, canvas.width, canvas.height);
   particles.forEach((particle) => {
     particle.velocity.x = ranDir();
     particle.velocity.y = ranDir();
@@ -48,5 +58,5 @@ function animate() {
     particle.draw();
   });
 }
-console.log(particles);
+// console.log(particles);
 animate();
