@@ -10,7 +10,7 @@ class Particle {
     this.x = x;
     this.y = y;
     this.radius = radius;
-    this.color = color;
+    this.color = '#ffffff';
     this.velocity = velocity;
     this.trail = [];
   }
@@ -28,24 +28,24 @@ class Particle {
   }
 
   manageTrail() {
-    this.trail.push(
-      new Particle(this.x, this.y, this.radius, this.color, {
-        x: this.velocity.x,
-        y: this.velocity.y,
-      })
-    );
-    if (this.trail.length >= 89) {
-      this.trail.shift();
-      // console.log(this.trail);
-      // debugger;
-    }
-    for (let i = 0; i < this.trail.length; i++) {
-      this.trail[i].color = this.color + String(i + 10);
-    }
+    //   this.trail.push(
+    //     new Particle(this.x, this.y, this.radius, this.color, {
+    //       x: this.velocity.x,
+    //       y: this.velocity.y,
+    //     })
+    //   );
+    //   if (this.trail.length >= 89) {
+    //     this.trail.shift();
+    //     // console.log(this.trail);
+    //     // debugger;
+    //   }
+    //   for (let i = 0; i < this.trail.length; i++) {
+    //     this.trail[i].color = this.color + String(i + 10);
+    //   }
   }
 }
 
-const spawnCount = 100;
+const spawnCount = 1000;
 const size = 2;
 const particles = [];
 
@@ -66,7 +66,8 @@ for (let i = 0; i < spawnCount; i++) {
 
 function animate() {
   requestAnimationFrame(animate);
-  ctx.fillStyle = '#ffffff';
+
+  ctx.fillStyle = '#11111901';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   particles.forEach((particle) => {
     particle.velocity.x = ranDir();
@@ -74,9 +75,9 @@ function animate() {
     particle.update();
     particle.draw();
     particle.manageTrail();
-    particle.trail.forEach((trailingParticle) => {
-      trailingParticle.draw();
-    });
+    // particle.trail.forEach((trailingParticle) => {
+    //   trailingParticle.draw();
+    // });
   });
 }
 // console.log(particles);
