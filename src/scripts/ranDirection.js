@@ -8,6 +8,7 @@ function randomDirection() {
   } else {
     randomDirection = Math.random() * 1;
   }
+
   return randomDirection;
 }
 

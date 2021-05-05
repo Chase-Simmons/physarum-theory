@@ -3,7 +3,7 @@ import ranColor from './ranColor';
 import ranDir from './ranDirection';
 
 const ctx = canvas.getContext('2d');
-// ctx.filter = 'blur(1px';
+// ctx.filter = 'blur(1px)';
 
 class Particle {
   constructor(x, y, radius, color, velocity) {
@@ -12,10 +12,10 @@ class Particle {
     this.radius = radius;
     this.color = 'rgba(255,255,255)';
     this.velocity = velocity;
-    this.trail = [];
   }
 
   draw() {
+    new TrailingParticle(this.x, this.y, this.radius + 5);
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
     ctx.fillStyle = this.color;
@@ -38,9 +38,39 @@ class Particle {
   }
 }
 
+class TrailingParticle {
+  constructor(x, y, radius) {
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+    this.opacity = 255;
+
+    this.initiateDiffusion();
+    this.add();
+  }
+
+  initiateDiffusion() {
+    setInterval(() => {
+      if (this.opacity > 1) {
+        this.opacity -= 1;
+      } else if (this.opacity === 1) {
+        this.opacity -= 1;
+        this.remove();
+      }
+    }, 100);
+  }
+
+  add() {
+    TrailingParticles.push(this);
+  }
+  remove() {
+    TrailingParticles.shift();
+  }
+}
 const spawnCount = 200;
 const size = 2;
 const particles = [];
+const TrailingParticles = [];
 
 for (let i = 0; i < spawnCount; i++) {
   particles.push(
@@ -73,39 +103,49 @@ function decreaseAlphas() {
   }
 
   ctx.putImageData(pixels, 0, 0);
+  // defuseParticles();
 }
 
-function defuseParticles() {
-  let pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
+// function defuseParticles() {
+// let pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-  const pixel = 4;
-  const row = canvas.width;
+// const row = canvas.width;
 
-  const pixelArray = [];
-  for (let i = 0; i < pixels.data.length; i += 4) {
-    // pixelArray.push({
-    //   r: pixels.data[i],
-    //   g: pixels.data[i + 1],
-    //   b: pixels.data[i + 2],
-    //   a: pixels.data[i + 3],
-    // });
-    const r = i;
-    const g = i + 1;
-    const b = i + 2;
-    const a = i + 3;
+// const pixelsForDefusion = [];
 
-    pixels.data[r] = 255;
-    pixels.data[g] = pixels.data[i + 1];
-    pixels.data[b] = pixels.data[i + 2];
-    pixels.data[a] = 255;
-  }
+// for (let i = 0; i < pixels.data.length; i += 4) {
+//   let pixel = i - 4;
+//   if (pixel < 0) {
+//     pixel = 0;
+//   }
+//   const r = i;
+//   const g = i + 1;
+//   const b = i + 2;
+//   const a = i + 3;
 
-  // console.log(pixelArray);
-  ctx.putImageData(pixels, 0, 0);
-}
+//   if (pixels.data[a] !== 0) {
+//     pixelsForDefusion.push(pixel);
+// pixels.data[r - pixel] = pixels.data[r];
+// pixels.data[g - pixel] = pixels.data[b];
+// pixels.data[b - pixel] = pixels.data[g];
+// pixels.data[a - pixel] = pixels.data[a] - 5;
+// pixels.data[r + pixel] = pixels.data[r];
+// pixels.data[g + pixel] = pixels.data[g];
+// pixels.data[b + pixel] = pixels.data[b];
+// pixels.data[a + pixel] = pixels.data[a] - 5;
+//   }
+// }
+
+//   ctx.putImageData(pixels, 0, 0);
+// console.log(pixelsForDefusion);
+// debugger;
+// }
 
 setInterval(() => {
   decreaseAlphas();
 }, 100);
 animate();
-defuseParticles();
+
+setInterval(() => {
+  console.log(TrailingParticles);
+}, 5000);
