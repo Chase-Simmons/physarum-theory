@@ -1,4 +1,4 @@
-export default () => {
+function randomDirection() {
   let randomDirection;
 
   const randomBool = Math.floor(Math.random() * 2);
@@ -9,4 +9,6 @@ export default () => {
     randomDirection = Math.random() * 1;
   }
   return randomDirection;
-};
+}
+
+export default randomDirection;

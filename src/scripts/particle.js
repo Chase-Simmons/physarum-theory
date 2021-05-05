@@ -10,7 +10,7 @@ class Particle {
     this.x = x;
     this.y = y;
     this.radius = radius;
-    this.color = '#ffffff';
+    this.color = 'rgba(255,255,255)';
     this.velocity = velocity;
     this.trail = [];
   }
@@ -35,23 +35,6 @@ class Particle {
       this.velocity.x = ranDir();
       this.velocity.y = ranDir();
     }
-  }
-
-  manageTrail() {
-    //   this.trail.push(
-    //     new Particle(this.x, this.y, this.radius, this.color, {
-    //       x: this.velocity.x,
-    //       y: this.velocity.y,
-    //     })
-    //   );
-    //   if (this.trail.length >= 89) {
-    //     this.trail.shift();
-    //     // console.log(this.trail);
-    //     // debugger;
-    //   }
-    //   for (let i = 0; i < this.trail.length; i++) {
-    //     this.trail[i].color = this.color + String(i + 10);
-    //   }
   }
 }
 
@@ -92,8 +75,37 @@ function decreaseAlphas() {
   ctx.putImageData(pixels, 0, 0);
 }
 
+function defuseParticles() {
+  let pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+  const pixel = 4;
+  const row = canvas.width;
+
+  const pixelArray = [];
+  for (let i = 0; i < pixels.data.length; i += 4) {
+    // pixelArray.push({
+    //   r: pixels.data[i],
+    //   g: pixels.data[i + 1],
+    //   b: pixels.data[i + 2],
+    //   a: pixels.data[i + 3],
+    // });
+    const r = i;
+    const g = i + 1;
+    const b = i + 2;
+    const a = i + 3;
+
+    pixels.data[r] = 255;
+    pixels.data[g] = pixels.data[i + 1];
+    pixels.data[b] = pixels.data[i + 2];
+    pixels.data[a] = 255;
+  }
+
+  // console.log(pixelArray);
+  ctx.putImageData(pixels, 0, 0);
+}
+
 setInterval(() => {
   decreaseAlphas();
 }, 100);
-// console.log(particles);
 animate();
+defuseParticles();
