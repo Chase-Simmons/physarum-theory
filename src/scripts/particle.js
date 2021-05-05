@@ -37,11 +37,15 @@ class Particle {
         this.velocity.y = navigate().y;
       }
     } else {
-      console.log(mouseCoords);
-      const navigateTo = navigate(mouseCoords);
+      const navigateTo = navMouse(mouseCoords, { x: this.x, y: this.y });
       this.velocity.x = navigateTo.x;
       this.velocity.y = navigateTo.y;
     }
+  }
+
+  reset() {
+    this.velocity.x = navigate().x;
+    this.velocity.y = navigate().y;
   }
 }
 
@@ -74,8 +78,8 @@ class TrailingParticle {
     TrailingParticles.shift();
   }
 }
-const spawnCount = 200;
-const size = 2;
+const spawnCount = 5000;
+const size = 1;
 const particles = [];
 const TrailingParticles = [];
 
@@ -84,13 +88,17 @@ const mouseCoords = {
   x: undefined,
   y: undefined,
 };
-window.addEventListener('mousedown', (e) => {
+
+window.addEventListener('mousemove', (e) => {
   mouseover = true;
   mouseCoords.x = e.clientX;
   mouseCoords.y = e.clientY;
 });
-window.addEventListener('mouseup', () => {
+window.addEventListener('mouseout', () => {
   mouseover = false;
+  particles.forEach((particle) => {
+    particle.reset();
+  });
 });
 
 for (let i = 0; i < spawnCount; i++) {
@@ -120,7 +128,7 @@ function decreaseAlphas() {
   let pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
   for (let i = 0; i < pixels.data.length; i += 4) {
-    pixels.data[i + 3] = pixels.data[i + 3] - 2; //alpha
+    pixels.data[i + 3] = pixels.data[i + 3] - 1; //alpha
   }
 
   ctx.putImageData(pixels, 0, 0);

@@ -1,15 +1,14 @@
-import canvas from './canvas';
-
-function navMouse(coords) {
-  console.log(coords);
+function navMouse(coords, oldCoords) {
   const x = coords.x;
   const y = coords.y;
 
-  const angle = Math.atan2(canvas.height / 2 - y, canvas.width / 2 - x);
+  oldCoords.x += Math.random() * 400;
+  oldCoords.y += Math.random() * 400;
+  const angle = Math.atan2(y - oldCoords.y, x - oldCoords.x);
 
   return { x: Math.cos(angle), y: Math.sin(angle) };
 }
 
-export default (coords) => {
-  navMouse(coords);
+export default (coords, oldCoords) => {
+  return navMouse(coords, oldCoords);
 };
