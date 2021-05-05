@@ -1,6 +1,7 @@
 import canvas from './canvas';
 import ranColor from './ranColor';
-import ranDir from './ranDirection';
+import navigate from './navigate';
+import navMouse from './navMouse';
 
 const ctx = canvas.getContext('2d');
 // ctx.filter = 'blur(1px)';
@@ -15,7 +16,7 @@ class Particle {
   }
 
   draw() {
-    new TrailingParticle(this.x, this.y, this.radius + 5);
+    // new TrailingParticle(this.x, this.y, this.radius + 5);
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
     ctx.fillStyle = this.color;
@@ -25,15 +26,21 @@ class Particle {
   update() {
     this.x += this.velocity.x;
     this.y += this.velocity.y;
-
-    if (
-      this.x > canvas.width ||
-      this.x < 0 ||
-      this.y > canvas.height ||
-      this.y < 0
-    ) {
-      this.velocity.x = ranDir();
-      this.velocity.y = ranDir();
+    if (mouseover === false) {
+      if (
+        this.x > canvas.width ||
+        this.x < 0 ||
+        this.y > canvas.height ||
+        this.y < 0
+      ) {
+        this.velocity.x = navigate().x;
+        this.velocity.y = navigate().y;
+      }
+    } else {
+      console.log(mouseCoords);
+      const navigateTo = navigate(mouseCoords);
+      this.velocity.x = navigateTo.x;
+      this.velocity.y = navigateTo.y;
     }
   }
 }
@@ -72,6 +79,20 @@ const size = 2;
 const particles = [];
 const TrailingParticles = [];
 
+let mouseover = false;
+const mouseCoords = {
+  x: undefined,
+  y: undefined,
+};
+window.addEventListener('mousedown', (e) => {
+  mouseover = true;
+  mouseCoords.x = e.clientX;
+  mouseCoords.y = e.clientY;
+});
+window.addEventListener('mouseup', () => {
+  mouseover = false;
+});
+
 for (let i = 0; i < spawnCount; i++) {
   particles.push(
     new Particle(
@@ -80,8 +101,8 @@ for (let i = 0; i < spawnCount; i++) {
       size,
       ranColor(),
       {
-        x: ranDir(),
-        y: ranDir(),
+        x: navigate().x,
+        y: navigate().y,
       }
     )
   );
@@ -99,7 +120,7 @@ function decreaseAlphas() {
   let pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
   for (let i = 0; i < pixels.data.length; i += 4) {
-    pixels.data[i + 3] = pixels.data[i + 3] - 1; //alpha
+    pixels.data[i + 3] = pixels.data[i + 3] - 2; //alpha
   }
 
   ctx.putImageData(pixels, 0, 0);
@@ -145,7 +166,3 @@ setInterval(() => {
   decreaseAlphas();
 }, 100);
 animate();
-
-setInterval(() => {
-  console.log(TrailingParticles);
-}, 5000);
