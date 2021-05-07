@@ -132,43 +132,7 @@ function decreaseAlphas() {
   }
 
   ctx.putImageData(pixels, 0, 0);
-  // defuseParticles();
 }
-
-// function defuseParticles() {
-// let pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
-// const row = canvas.width;
-
-// const pixelsForDefusion = [];
-
-// for (let i = 0; i < pixels.data.length; i += 4) {
-//   let pixel = i - 4;
-//   if (pixel < 0) {
-//     pixel = 0;
-//   }
-//   const r = i;
-//   const g = i + 1;
-//   const b = i + 2;
-//   const a = i + 3;
-
-//   if (pixels.data[a] !== 0) {
-//     pixelsForDefusion.push(pixel);
-// pixels.data[r - pixel] = pixels.data[r];
-// pixels.data[g - pixel] = pixels.data[b];
-// pixels.data[b - pixel] = pixels.data[g];
-// pixels.data[a - pixel] = pixels.data[a] - 5;
-// pixels.data[r + pixel] = pixels.data[r];
-// pixels.data[g + pixel] = pixels.data[g];
-// pixels.data[b + pixel] = pixels.data[b];
-// pixels.data[a + pixel] = pixels.data[a] - 5;
-//   }
-// }
-
-//   ctx.putImageData(pixels, 0, 0);
-// console.log(pixelsForDefusion);
-// debugger;
-// }
 
 setInterval(() => {
   decreaseAlphas();
